@@ -159,6 +159,11 @@ public abstract class StateTable<K, N, S>
 		put(keyContext.getCurrentKey(), keyContext.getCurrentKeyGroupIndex(), namespace, state);
 	}
 
+	public void put(K key, N namespace, S state) {
+		int keyGroup = KeyGroupRangeAssignment.assignToKeyGroup(key, keyContext.getNumberOfKeyGroups());
+		put(key, keyGroup, namespace, state);
+	}
+
 	/**
 	 * Removes the mapping for the composite of active key and given namespace. This method should be preferred
 	 * over {@link #removeAndGetOld(N)} when the caller is not interested in the old state.
@@ -167,6 +172,11 @@ public abstract class StateTable<K, N, S>
 	 */
 	public void remove(N namespace) {
 		remove(keyContext.getCurrentKey(), keyContext.getCurrentKeyGroupIndex(), namespace);
+	}
+
+	public void remove(K key, N namespace) {
+		int keyGroup = KeyGroupRangeAssignment.assignToKeyGroup(key, keyContext.getNumberOfKeyGroups());
+		remove(key, keyGroup, namespace);
 	}
 
 	/**
